@@ -1,7 +1,8 @@
 {% import "Feedback::Macros.ComponentLoader" as ComponentLoader %}
-
+{% if services.template.getCurrentTemplate() == 'tpl.item' %}
 {{ ComponentLoader.importComponent("FeedbackComment") }}
 {{ ComponentLoader.importComponent("FeedbackForm") }}
 {{ ComponentLoader.importComponent("FeedbackList") }}
 {{ ComponentLoader.importComponent("FeedbackListEntry") }}
 {{ ComponentLoader.importComponent("FeedbackContainer") }}
+{% endif %}
