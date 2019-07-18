@@ -7,7 +7,6 @@ use Feedback\Services\FeedbackService;
 use IO\Services\SessionStorageService;
 use Plenty\Modules\Feedback\Contracts\FeedbackAverageRepositoryContract;
 use Plenty\Modules\Feedback\Contracts\FeedbackRepositoryContract;
-use Plenty\Modules\Feedback\Controllers\FeedbackController;
 use Plenty\Modules\Frontend\Services\AccountService;
 use Plenty\Modules\Item\Attribute\Contracts\AttributeNameRepositoryContract;
 use Plenty\Modules\Item\Attribute\Contracts\AttributeValueNameRepositoryContract;
@@ -16,9 +15,12 @@ use Plenty\Modules\Item\Variation\Contracts\VariationRepositoryContract;
 use Plenty\Modules\Order\Contracts\OrderRepositoryContract;
 use Plenty\Plugin\Http\Request;
 use Plenty\Plugin\Templates\Twig;
+use Plenty\Plugin\Log\Loggable;
 
 class Feedback
 {
+
+    use Loggable;
     /**
      * @param $item
      * @param Request $request
@@ -160,7 +162,6 @@ class Feedback
             }
 
             $data['feedbacks'] = $feedbackResults;
-
         }
 
         $data['options'] = $options;
@@ -168,6 +169,6 @@ class Feedback
         $data['authenticatedContact'] = $authenticatedContact;
         $data['item'] = $item;
 
-        return $twig->render('Feedback::DataProvider.Feedback', $data);
+        return $twig->render('Feedback::DataProvider.Feedback', $data );
     }
 }

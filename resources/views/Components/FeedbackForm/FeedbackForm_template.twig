@@ -1,6 +1,6 @@
 <script type="x/template" id="vue-feedback-form">
     <div>
-        <div class="createFeedback" v-if="authenticatedUser.isLoggedIn">
+        <div class="createFeedback" >
             <div class="stars">
                 {% for i in 5..1 %}
 
@@ -23,6 +23,10 @@
             {% endif %}
 
             <div class="form-group" :class="{'has-danger': titleMissing}">
+                <input v-if="!authenticatedUser.isLoggedIn" type="text" id="authorName" name="authorName" 
+                placeholder="Ihr Name"
+                class="form-control" v-model="feedback.authorName" required>
+
                 <input type="text"
                        v-model="feedback.title"
                        class="form-control"
@@ -63,16 +67,6 @@
                 {{ trans("Feedback::Feedback.submitReview") }}
             </button>
 
-        </div>
-        <div v-else>
-            <div class="alert alert-info">
-                {{ trans("Feedback::Feedback.logInCustomerReviews") }}
-            </div>
-
-            <a class="btn btn-primary" data-toggle="modal" href="#login">
-                <i class="fa fa-user" aria-hidden="true"></i>
-                <span>{{ trans("Feedback::Feedback.login") }}</span>
-            </a>
         </div>
     </div>
 </script>

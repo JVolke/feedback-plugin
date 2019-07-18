@@ -23,6 +23,7 @@ use Plenty\Modules\Order\Contracts\OrderRepositoryContract;
 use Plenty\Plugin\Controller;
 use Plenty\Plugin\Http\Request;
 use Plenty\Plugin\Templates\Twig;
+use Plenty\Modules\Authorization\Services\AuthHelper;
 
 class FeedbacksController extends Controller
 {
@@ -35,21 +36,42 @@ class FeedbacksController extends Controller
     public function create(Request $request, FeedbackRepositoryContract $feedbackRepository, FeedbackCoreHelper $coreHelper, AccountService $accountService)
     {
 
-        $creatorContactId = $accountService->getAccountContactId();
+        $authHelper = pluginApp(AuthHelper::class);
+
+        $creatorContactId = $authHelper->processUnguarded(
+          function() use ($accountService){
+            return   $accountService->getAccountContactId();
+          }
+        );
+
 
         // Set options
-        $options = [
-            'feedbackRelationTargetId' => $request->input('targetId'),
-            'feedbackRelationSources' => [
-                [
-                    'feedbackRelationSourceType' => 'contact',
-                    'feedbackRelationSourceId' => $creatorContactId
-                ]
-            ],
-            'commentRelationTargetType' => 'feedbackComment',
-            'ratingRelationTargetType' => 'feedbackRating'
-        ];
-
+        if($creatorContactId)
+        {
+          $options = [
+              'feedbackRelationTargetId' => $request->input('targetId'),
+              'feedbackRelationSources' => [
+                  [
+                      'feedbackRelationSourceType' => 'contact',
+                      'feedbackRelationSourceId' => $creatorContactId
+                  ]
+              ],
+              'commentRelationTargetType' => 'feedbackComment',
+              'ratingRelationTargetType' => 'feedbackRating'
+          ];
+        } else {
+          $options = [
+              'feedbackRelationTargetId' => $request->input('targetId'),
+              'feedbackRelationSources' => [
+                  [
+                      'feedbackRelationSourceType' => 'contact',
+                      'feedbackRelationSourceId' => 0
+                  ]
+              ],
+              'commentRelationTargetType' => 'feedbackComment',
+              'ratingRelationTargetType' => 'feedbackRating'
+          ];
+        }
 
 
         // Check the type and set the target accordingly
@@ -78,32 +100,32 @@ class FeedbacksController extends Controller
             $allowFeedbacksOnlyIfPurchased = $coreHelper->configValue(FeedbackCoreHelper::KEY_ALLOW_FEEDBACKS_ONLY_IF_PURCHASED) == 'true' ? true : false;
 
             // get variations bought
-            $orders = pluginApp(OrderRepositoryContract::class)->allOrdersByContact($creatorContactId);
+            if ($creatorContactId)
+            {
+              $orders = pluginApp(OrderRepositoryContract::class)->allOrdersByContact($creatorContactId);
 
-            $purchasedVariations = [];
+              $purchasedVariations = [];
 
-            foreach($orders->getResult() as $order){
-                foreach($order->orderItems as $orderItem){
-                    $purchasedVariations[] = $orderItem->itemVariationId;
-                }
+              foreach($orders->getResult() as $order){
+                  foreach($order->orderItems as $orderItem){
+                      $purchasedVariations[] = $orderItem->itemVariationId;
+                  }
+              }
+
+              if(in_array($request->input('targetId'), $purchasedVariations)){
+
+                  $creatorPurchasedThisVariation = true;
+                  $options['feedbackRelationSources'][] =
+                      [
+                          "feedbackRelationSourceType" => 'orderItem',
+                          "feedbackRelationSourceId" => $options['feedbackRelationTargetId']
+                      ]
+                  ;
+              }
+              if($allowFeedbacksOnlyIfPurchased && !$creatorPurchasedThisVariation){
+                  return 'Not allowed to create review without purchasing the item first';
+              }
             }
-
-            if(in_array($request->input('targetId'), $purchasedVariations)){
-
-                $creatorPurchasedThisVariation = true;
-                $options['feedbackRelationSources'][] =
-                    [
-                        "feedbackRelationSourceType" => 'orderItem',
-                        "feedbackRelationSourceId" => $options['feedbackRelationTargetId']
-                    ]
-                ;
-            }
-
-            if($allowFeedbacksOnlyIfPurchased && !$creatorPurchasedThisVariation){
-                return 'Not allowed to create review without purchasing the item first';
-            }
-
-
 
             if(!empty($limitPerUserPerItem) && $limitPerUserPerItem != 0){
 
@@ -119,7 +141,13 @@ class FeedbacksController extends Controller
 
             }
 
-            return $feedbackRepository->createFeedback(array_merge($request->all(), $options));
+            $result =   $authHelper->processUnguarded(
+              function() use ($feedbackRepository,$request,$options){
+                return $feedbackRepository->createFeedback(array_merge($request->all(), $options));
+              }
+            );
+
+            return $result;
 
 
 
@@ -128,7 +156,14 @@ class FeedbacksController extends Controller
             $options['feedbackRelationTargetType'] = 'feedback';
             $options['isVisible'] = true;
 
-            return $feedbackRepository->createFeedback(array_merge($request->all(), $options));
+
+            $result =   $authHelper->processUnguarded(
+              function() use ($feedbackRepository,$request,$options){
+                return $feedbackRepository->createFeedback(array_merge($request->all(), $options));
+              }
+            );
+
+            return $result;
 
         }
 
@@ -261,6 +296,7 @@ class FeedbacksController extends Controller
             'feedbacks'             => $feedbackResults,
             'options'               => $options,
             'itemAttributes'        => $itemAttributes,
+            'feedbackList'          => $feedbacks,
             'pagination'            => [
                 'page' => $page,
                 'lastPage' => $feedbacks->getLastPage(),
