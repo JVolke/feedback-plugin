@@ -46,32 +46,17 @@ class FeedbacksController extends Controller
 
 
         // Set options
-        if($creatorContactId)
-        {
-          $options = [
+        $options = [
               'feedbackRelationTargetId' => $request->input('targetId'),
               'feedbackRelationSources' => [
                   [
                       'feedbackRelationSourceType' => 'contact',
-                      'feedbackRelationSourceId' => $creatorContactId
+                      'feedbackRelationSourceId' => $creatorContactId ?? 0
                   ]
               ],
               'commentRelationTargetType' => 'feedbackComment',
               'ratingRelationTargetType' => 'feedbackRating'
           ];
-        } else {
-          $options = [
-              'feedbackRelationTargetId' => $request->input('targetId'),
-              'feedbackRelationSources' => [
-                  [
-                      'feedbackRelationSourceType' => 'contact',
-                      'feedbackRelationSourceId' => 0
-                  ]
-              ],
-              'commentRelationTargetType' => 'feedbackComment',
-              'ratingRelationTargetType' => 'feedbackRating'
-          ];
-        }
 
 
         // Check the type and set the target accordingly
