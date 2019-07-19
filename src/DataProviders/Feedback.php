@@ -15,12 +15,10 @@ use Plenty\Modules\Item\Variation\Contracts\VariationRepositoryContract;
 use Plenty\Modules\Order\Contracts\OrderRepositoryContract;
 use Plenty\Plugin\Http\Request;
 use Plenty\Plugin\Templates\Twig;
-use Plenty\Plugin\Log\Loggable;
 
 class Feedback
 {
 
-    use Loggable;
     /**
      * @param $item
      * @param Request $request
@@ -162,6 +160,7 @@ class Feedback
             }
 
             $data['feedbacks'] = $feedbackResults;
+
         }
 
         $data['options'] = $options;
@@ -169,6 +168,6 @@ class Feedback
         $data['authenticatedContact'] = $authenticatedContact;
         $data['item'] = $item;
 
-        return $twig->render('Feedback::DataProvider.Feedback', $data );
+        return $twig->render('Feedback::DataProvider.Feedback', $data);
     }
 }
