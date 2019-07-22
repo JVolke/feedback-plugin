@@ -20,14 +20,16 @@ use Plenty\Modules\Item\Attribute\Contracts\AttributeValueNameRepositoryContract
 use Plenty\Modules\Item\Item\Contracts\ItemRepositoryContract;
 use Plenty\Modules\Item\Variation\Contracts\VariationRepositoryContract;
 use Plenty\Modules\Order\Contracts\OrderRepositoryContract;
+use Plenty\Plugin\Translation\Translator;
 use Plenty\Plugin\Controller;
 use Plenty\Plugin\Http\Request;
 use Plenty\Plugin\Templates\Twig;
 use Plenty\Modules\Authorization\Services\AuthHelper;
 
+
+
 class FeedbacksController extends Controller
 {
-
     /**
      * @param Request $request
      * @param FeedbackRepositoryContract $feedbackRepository
@@ -126,9 +128,18 @@ class FeedbacksController extends Controller
 
             }
 
+
+            $translator = pluginApp(Translator::class);
+
+            $feedbackObject = array_merge($request->all(), $options);
+            if (strlen($feedbackObject["authorName"]) < 1)
+            {
+              $feedbackObject["authorName"] = $translator->trans("Feedback::Feedback.guestName");
+            }
+
             $result =   $authHelper->processUnguarded(
-              function() use ($feedbackRepository,$request,$options){
-                return $feedbackRepository->createFeedback(array_merge($request->all(), $options));
+              function() use ($feedbackRepository,$feedbackObject){
+                return $feedbackRepository->createFeedback($feedbackObject);
               }
             );
 

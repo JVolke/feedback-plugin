@@ -82,6 +82,7 @@
                 <feedback-form
                         v-if="!isLoading"
                         :variation-id="variationId"
+                        :allow-guest-reviews="{% if config('Feedback.allowGuestReviews') == 'true' %}true{% else %}false{% endif %}"
                         :rating-required="{% if config('Feedback.allowNoRatingFeedback') == 'true' %}false{% else %}true{% endif %}"
                         :authenticated-user="authenticatedUser"
                         @feedback-added="onFeedbackAdded($event)">
