@@ -40,6 +40,10 @@ class FeedbacksController extends Controller
      */
     public function create(Request $request, FeedbackRepositoryContract $feedbackRepository, FeedbackCoreHelper $coreHelper, AccountService $accountService)
     {
+      if(strlen($request->get("textfield")) > 0)
+      {
+        return "Something went wrong";
+      }
 
         $authHelper = pluginApp(AuthHelper::class);
 
@@ -291,16 +295,7 @@ class FeedbacksController extends Controller
                 $feedback->targetRelation->variationAttributes = json_decode($feedback->targetRelation->targetRelationName);
             }
         }
-        $this->getLogger(__METHOD__)->error("Try This", [
-            'feedbacks'             => $feedbackResults,
-            'options'               => $options,
-            'itemAttributes'        => $itemAttributes,
-            'feedbackList'          => $feedbacks,
-            'pagination'            => [
-                'page' => $page,
-                'lastPage' => $feedbacks->getLastPage(),
-                'isLastPage' => $feedbacks->isLastPage()
-            ]]);
+
         return [
             'feedbacks'             => $feedbackResults,
             'options'               => $options,
