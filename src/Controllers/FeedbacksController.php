@@ -25,11 +25,14 @@ use Plenty\Plugin\Controller;
 use Plenty\Plugin\Http\Request;
 use Plenty\Plugin\Templates\Twig;
 use Plenty\Modules\Authorization\Services\AuthHelper;
+use Plenty\Plugin\Log\Loggable;
+
 
 
 
 class FeedbacksController extends Controller
 {
+    use Loggable;
     /**
      * @param Request $request
      * @param FeedbackRepositoryContract $feedbackRepository
@@ -288,6 +291,16 @@ class FeedbacksController extends Controller
                 $feedback->targetRelation->variationAttributes = json_decode($feedback->targetRelation->targetRelationName);
             }
         }
+        $this->getLogger(__METHOD__)->error("Try This", [
+            'feedbacks'             => $feedbackResults,
+            'options'               => $options,
+            'itemAttributes'        => $itemAttributes,
+            'feedbackList'          => $feedbacks,
+            'pagination'            => [
+                'page' => $page,
+                'lastPage' => $feedbacks->getLastPage(),
+                'isLastPage' => $feedbacks->isLastPage()
+            ]]);
         return [
             'feedbacks'             => $feedbackResults,
             'options'               => $options,
