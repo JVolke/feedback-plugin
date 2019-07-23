@@ -25,8 +25,8 @@
             <div class="form-group" :class="{'has-danger': titleMissing}">
                 <input v-if="!authenticatedUser.isLoggedIn" type="text" id="authorName" name="authorName"
                 placeholder="{{ trans("Feedback::Feedback.authorName") }}"
-                class="form-control" v-model="feedback.authorName" >
-                <input type="text" id="textfield" name="textfield" value="" class="feedback-textfield" v-model="feedback.textfield">
+                class="form-control feedback-authorname" v-model="feedback.authorName" >
+                <input type="text" v-if="!authenticatedUser.isLoggedIn" id="textfield" name="textfield" value="" class="feedback-textfield" v-model="feedback.textfield">
 
                 <input type="text"
                        v-model="feedback.title"
