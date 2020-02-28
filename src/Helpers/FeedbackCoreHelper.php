@@ -55,7 +55,7 @@ class FeedbackCoreHelper
     /**
      * @param string $key
      * @return mixed
-     */
+     */ 
     public function configValue(string $key)
     {
         return $this->config->get(self::PLUGIN_NAME . '.' . $key);

@@ -9,10 +9,6 @@
     "namespace": "Feedback",
     "author": "plentysystems AG",
     "type": "general",
-    "require": {
-        "IO": ">=4.5.0",
-        "Ceres": ">=4.5.0"
-    },
     "isClosedSource": false,
     "serviceProvider": "Feedback\\Providers\\FeedbackServiceProvider",
     "runOnBuild": [
