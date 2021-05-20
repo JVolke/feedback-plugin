@@ -4,8 +4,10 @@
 {{ ComponentLoader.importTemplate("FeedbackListEntry") }}
 {{ ComponentLoader.importTemplate("FeedbackComment") }}
 {{ ComponentLoader.importTemplate("FeedbackContainer") }}
-<feedback-container
-        :item-id="{{ item[0].documents[0].data.item.id }}"
-        :variation-id="{{ item[0].documents[0].data.variation.id }}"
-        :counts="{{ counts | json_encode }}">
-</feedback-container>
+<client-only>
+    <feedback-container
+            :item-id="{{ item[0].documents[0].data.item.id }}"
+            :variation-id="{{ item[0].documents[0].data.variation.id }}"
+            :counts="{{ counts | json_encode }}">
+    </feedback-container>
+</client-only>
