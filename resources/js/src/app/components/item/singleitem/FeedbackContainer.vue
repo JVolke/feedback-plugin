@@ -289,7 +289,6 @@ export default {
         this.loadFeedbacks()
       ).done(function () {
         _self.isLoading = false
-        _self.generateJsonLD()
         Vue.nextTick(function () {
           // DOM updated
           window.dispatchEvent(new Event('resize'))

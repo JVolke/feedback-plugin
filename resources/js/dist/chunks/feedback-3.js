@@ -327,9 +327,6 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
 
       $.when(this.getUser(), this.getCounts(), this.loadFeedbacks()).done(function () {
         _self.isLoading = false;
-
-        _self.generateJsonLD();
-
         Vue.nextTick(function () {
           // DOM updated
           window.dispatchEvent(new Event('resize'));
