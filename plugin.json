@@ -45,6 +45,11 @@
             "name": "Feedback category ratings",
             "description": "Feedback category ratings",
             "defaultLayoutContainer": "Ceres::CategoryItem.BeforePrices"
+        },
+        {
+            "key": "Feedback\\Containers\\FeedbackContainer",
+            "name": "Feedback Container",
+            "description": "Feedback Container Old School"
         }
     ],
     "dependencies": {},
