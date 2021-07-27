@@ -1,3 +1,4 @@
+{% if urls.is("item") %}
 <script type="text/javascript">
     window.feedbackPublicPath = "{{ plugin_path('Feedback') ~ '/js/dist/' }}"
 </script>
@@ -9,3 +10,4 @@
 
 <!-- SSR:entry({{ ssr_entry('Feedback', 'resources/js/dist/feedback-server' ~ minSuffix ~ '.js') }}) -->
 <script src="{{ plugin_path('Feedback') }}/js/dist/feedback{{ minSuffix }}.js?v={{ buildHash }}"></script>
+{% endif %}

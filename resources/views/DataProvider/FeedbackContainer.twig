@@ -1,0 +1,13 @@
+{%
+    set options = {
+    "allowFeedbacksOnlyIfPurchased": false,
+    "allowNoRatingFeedback": false,
+    "feedbacksPerPage":10,
+    "numberOfFeedbacks":1,
+    "timestampVisibility":false,
+    "allowGuestFeedbacks":true
+}
+%}
+<feedback-container class="widget-inner"
+                    :options="{{ options | json_encode}}">
+</feedback-container>
