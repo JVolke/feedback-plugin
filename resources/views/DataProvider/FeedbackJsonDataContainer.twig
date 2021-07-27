@@ -1,4 +1,29 @@
-Feedback Liste
-{{ result | json_encode }}
-<br>ID: {{ itemId | json_encode }}
+{% if feedbackList.feedbacks | length > 0 %}
+<script type="application/ld+json">
+{
+            "@context": "http://schema.org/",
+            "@type": "Product",
+            "@id": "{{ itemId }}",
+
+            "review": [
+                     {% for feedback in feedbackList.feedbacks %}
+                          {
+                            "@type": "Review",
+                            "author": "{{ feedback.authorName}}",
+                            "datePublished": "{{ feedback.createdAt }}",
+                            "name": "{{ feedback.title }}",
+                            "description": "{{ feedback.message }}",
+                            "reviewRating": {
+                              "@type": "Rating",
+                              "bestRating": "5",
+                              "worstRating": "1",
+                              "ratingValue": "{{ feedback.feedbackRating.rating.ratingValue }}"
+                            }
+                          }
+                          {% if not loop.last %},{% endif %}
+                          {% endfor %}
+            ]
+ }
+</script>
+{% endif %}
 
