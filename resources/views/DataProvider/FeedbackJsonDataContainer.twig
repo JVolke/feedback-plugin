@@ -6,7 +6,7 @@
 {
             "@context"          : "http://schema.org/",
             "@type"             : "Product",
-            "@id"               : "{{ itemId }}",
+            "@id"               : "{{ item.documents[0].data.item.id }}",
             "aggregateRating"   :
              {
                   "@type"           : "AggregateRating",
