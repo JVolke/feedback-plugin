@@ -1,5 +1,5 @@
-{% set feedbackList = feedbackServices.paginate(item.documents[0].data.item.id,1,50) %}
-{% set feedbackCounts = feedbackServices.getCounts(item.documents[0].data.item.id) %}
+{% set feedbackList = feedbackServices.feedback.paginate(item.documents[0].data.item.id,1,50) %}
+{% set feedbackCounts = feedbackServices.feedback.getCounts(item.documents[0].data.item.id) %}
 
 {% if feedbackList.feedbacks | length > 0 %}
 <script type="application/ld+json">
