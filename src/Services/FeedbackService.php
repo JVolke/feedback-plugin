@@ -94,7 +94,6 @@ class FeedbackService
         }
 
         $data['counts'] = $counts;
-
         return $data;
     }
 
@@ -261,7 +260,6 @@ class FeedbackService
      */
     public function paginate($itemId, $page, $itemsPerPage = 50)
     {
-        $this->getLogger(__METHOD__)->error("Show Me itemId", $itemId);
         $lang = $this->localizationRepository->getLanguage();
         $itemVariations = [];
         $itemDataList = [];
@@ -323,7 +321,6 @@ class FeedbackService
         {
             $itemsPerPage = (int)$this->request->input('feedbacksPerPage');
         }
-        $this->getLogger(__METHOD__)->error("Show Me itemsPerPage", $itemsPerPage);
         $with = [];
         $filters = [
             'isVisible' => 1,
@@ -341,7 +338,6 @@ class FeedbackService
             $filters
         );
         $feedbackResults = $feedbacks->getResult();
-        $this->getLogger(__METHOD__)->error("Show Me Feedback Results", $feedbackResults);
 
         foreach ($feedbackResults as &$feedback) {
             if ($feedback->targetRelation->feedbackRelationType === 'variation') {

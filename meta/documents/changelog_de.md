@@ -1,5 +1,8 @@
 # Release Notes für Feedback
 
+## tba 
+- Das JSON Markup für das Feedback wird jetzt via Twig gerendert. Dafür ist es notwendig die dafür vorgesehen Standard Container Verknüpfung einmal zu setzen. 
+
 ## v4.0.4 (2021-07-06)
 
 ### TODO
