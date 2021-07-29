@@ -28,8 +28,7 @@
                               "worstRating"         : "1",
                               "ratingValue"         : "{{ feedback.feedbackRating.rating.ratingValue }}"
                             }
-                          }
-                          {% if not loop.last %},{% endif %}
+                          }{% if not loop.last %},{% endif %}
                     {% endfor %}
             ]
  }
