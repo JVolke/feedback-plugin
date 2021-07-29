@@ -55,7 +55,7 @@
             "key": "Feedback\\DataProviders\\FeedbackJsonDataContainer",
             "name": "Feedback JSON Container",
             "description": "JSON Via Twig and not Vue",
-            "defaultLayoutContainer": "Ceres::Template.Style"
+            "defaultLayoutContainer": "Ceres::Script.AfterScriptsLoaded"
         }
     ],
     "dependencies": {},
