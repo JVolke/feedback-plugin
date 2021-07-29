@@ -50,12 +50,6 @@
             "key": "Feedback\\DataProviders\\FeedbackContainer",
             "name": "Feedback Container",
             "description": "Feedback Container for the old Ceres implementation"
-        },
-        {
-            "key": "Feedback\\DataProviders\\FeedbackJsonDataContainer",
-            "name": "Feedback JSON Container",
-            "description": "JSON Via Twig and not Vue",
-            "defaultLayoutContainer": "Ceres::Script.AfterScriptsLoaded"
         }
     ],
     "dependencies": {},

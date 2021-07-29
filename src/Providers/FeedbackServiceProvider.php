@@ -59,6 +59,7 @@ class FeedbackServiceProvider extends ServiceProvider
             'IO.Resources.Import',
             function (ResourceContainer $resourceContainer) {
                 $resourceContainer->addScriptTemplate('Feedback::Content.Scripts');
+                $resourceContainer->addScriptTemplate('Feedback::Content.FeedbackJsonData');
                 $resourceContainer->addStyleTemplate('Feedback::Content.Styles');
             }
         );
