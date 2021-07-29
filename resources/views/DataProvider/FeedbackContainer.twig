@@ -8,6 +8,8 @@
     "allowGuestFeedbacks":true
 }
 %}
-<feedback-container class="widget-inner"
-                    :options="{{ options | json_encode}}">
-</feedback-container>
+<lazy-hydrate when-idle>
+    <feedback-container class="widget-inner"
+                        :options="{{ options | json_encode}}">
+    </feedback-container>
+</lazy-hydrate>
