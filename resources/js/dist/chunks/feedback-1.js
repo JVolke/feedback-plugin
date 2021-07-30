@@ -14,16 +14,8 @@
 __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var core_js_modules_es_array_index_of__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! core-js/modules/es.array.index-of */ "./node_modules/core-js/modules/es.array.index-of.js");
 /* harmony import */ var core_js_modules_es_array_index_of__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(core_js_modules_es_array_index_of__WEBPACK_IMPORTED_MODULE_0__);
-/* harmony import */ var vuex__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! vuex */ "./node_modules/vuex/dist/vuex.esm.js");
 /* harmony import */ var _mixins_loadFeedbackModule__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../../mixins/loadFeedbackModule */ "./resources/js/src/app/mixins/loadFeedbackModule.js");
 
-
-function ownKeys(object, enumerableOnly) { var keys = Object.keys(object); if (Object.getOwnPropertySymbols) { var symbols = Object.getOwnPropertySymbols(object); if (enumerableOnly) symbols = symbols.filter(function (sym) { return Object.getOwnPropertyDescriptor(object, sym).enumerable; }); keys.push.apply(keys, symbols); } return keys; }
-
-function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i] != null ? arguments[i] : {}; if (i % 2) { ownKeys(Object(source), true).forEach(function (key) { _defineProperty(target, key, source[key]); }); } else if (Object.getOwnPropertyDescriptors) { Object.defineProperties(target, Object.getOwnPropertyDescriptors(source)); } else { ownKeys(Object(source)).forEach(function (key) { Object.defineProperty(target, key, Object.getOwnPropertyDescriptor(source, key)); }); } } return target; }
-
-function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
-
 //
 //
 //
@@ -65,7 +57,6 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
 //
 //
 //
-
 
 /* harmony default export */ __webpack_exports__["default"] = ({
   mixins: [_mixins_loadFeedbackModule__WEBPACK_IMPORTED_MODULE_1__.default],
@@ -82,7 +73,7 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
     },
     showRatingsAmount: Boolean
   },
-  computed: _objectSpread({
+  computed: {
     fill: function fill() {
       var fillValue = this.counts.averageValue * 100 / 5;
       fillValue += '%';
@@ -90,12 +81,11 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
     },
     size: function size() {
       return this.sizeOfStars.indexOf('-stars') !== -1 ? this.sizeOfStars : this.sizeOfStars + '-stars';
+    },
+    counts: function counts() {
+      return this.$store.state.feedback.counts;
     }
-  }, (0,vuex__WEBPACK_IMPORTED_MODULE_2__.mapState)({
-    counts: function counts(state) {
-      return state.feedback.counts;
-    }
-  })),
+  },
   mounted: function mounted() {
     if (!App.isShopBuilder) {
       this.getAverage();

@@ -221,7 +221,6 @@
 <script>
 import FeedbackForm from './FeedbackForm.vue'
 import FeedbackList from './FeedbackList.vue'
-import { mapState } from 'vuex'
 import loadFeedbackModule from '../../../mixins/loadFeedbackModule'
 
 export default {
@@ -272,12 +271,20 @@ export default {
         return this.currentVariation && this.currentVariation.variation.id
       },
 
-      ...mapState({
-        authenticatedUser: state => state.feedback.authenticatedUser,
-        counts: state => state.feedback.counts,
-        feedbacks: state => state.feedback.feedbacks,
-        pagination: state => state.feedback.pagination
-      })
+      authenticatedUser () {
+        return this.$store.state.feedback.authenticatedUser
+      },
+
+      counts () {
+        return this.$store.state.feedback.counts
+      },
+      feedbacks () {
+        return this.$store.state.feedback.feedbacks
+      },
+
+      pagination () {
+        return this.$store.state.feedback.pagination
+      }
     },
 
   mounted () {
