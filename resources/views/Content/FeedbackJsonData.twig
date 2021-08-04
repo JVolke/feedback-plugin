@@ -17,9 +17,14 @@
                  },
                 "review": [
                          {% for feedback in feedbackList.feedbacks %}
+
                               {
                                 "@type"             : "Review",
+                                {% if feedback.authorName | length > 0 %}
                                 "author"            : "{{ feedback.authorName}}",
+                                {% else %}
+                                "author"            : "Unbekannt",
+                                {% endif %}
                                 "datePublished"     : "{{ feedback.createdAt }}",
                                 "name"              : "{{ feedback.title }}",
                                 "reviewBody"       : "{{ feedback.feedbackComment.comment.message }}",
