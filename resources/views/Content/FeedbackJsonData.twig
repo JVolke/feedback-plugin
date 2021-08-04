@@ -1,4 +1,5 @@
 {% if urls.is("item") %}
+
     {% set feedbackList = feedbackServices.feedback.paginate(item.documents[0].data.item.id,1,50) %}
     {% set feedbackCounts = feedbackServices.feedback.getCounts(item.documents[0].data.item.id) %}
 
@@ -17,13 +18,15 @@
                  },
                 "review": [
                          {% for feedback in feedbackList.feedbacks %}
-
+                            {% set authorName = feedback.authorName | trim %}
                               {
                                 "@type"             : "Review",
-                                {% if feedback.authorName | length > 0 %}
-                                "author"            : "{{ feedback.authorName}}",
+                                {% if (feedback.sourceRelation[0].feedbackRelationType == "user" or
+                                        feedback.sourceRelation[0].feedbackRelationType == 'contact') and
+                                        feedback.sourceRelation[0].feedbackRelationSourceId > 0 and authorName | length > 0 %}
+                                "author"            : "{{ feedback.sourceRelation[0].sourceRelationLabel }}",
                                 {% else %}
-                                "author"            : "Unbekannt",
+                                "author"            : "{{ authorName }}",
                                 {% endif %}
                                 "datePublished"     : "{{ feedback.createdAt }}",
                                 "name"              : "{{ feedback.title }}",
