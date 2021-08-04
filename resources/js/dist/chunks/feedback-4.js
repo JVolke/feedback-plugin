@@ -16,17 +16,11 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var core_js_modules_es_array_index_of__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(core_js_modules_es_array_index_of__WEBPACK_IMPORTED_MODULE_0__);
 /* harmony import */ var core_js_modules_es_array_slice__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! core-js/modules/es.array.slice */ "./node_modules/core-js/modules/es.array.slice.js");
 /* harmony import */ var core_js_modules_es_array_slice__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(core_js_modules_es_array_slice__WEBPACK_IMPORTED_MODULE_1__);
-/* harmony import */ var core_js_modules_es_number_constructor__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! core-js/modules/es.number.constructor */ "./node_modules/core-js/modules/es.number.constructor.js");
-/* harmony import */ var core_js_modules_es_number_constructor__WEBPACK_IMPORTED_MODULE_2___default = /*#__PURE__*/__webpack_require__.n(core_js_modules_es_number_constructor__WEBPACK_IMPORTED_MODULE_2__);
-/* harmony import */ var core_js_modules_es_regexp_exec__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! core-js/modules/es.regexp.exec */ "./node_modules/core-js/modules/es.regexp.exec.js");
-/* harmony import */ var core_js_modules_es_regexp_exec__WEBPACK_IMPORTED_MODULE_3___default = /*#__PURE__*/__webpack_require__.n(core_js_modules_es_regexp_exec__WEBPACK_IMPORTED_MODULE_3__);
-/* harmony import */ var core_js_modules_es_string_replace__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! core-js/modules/es.string.replace */ "./node_modules/core-js/modules/es.string.replace.js");
-/* harmony import */ var core_js_modules_es_string_replace__WEBPACK_IMPORTED_MODULE_4___default = /*#__PURE__*/__webpack_require__.n(core_js_modules_es_string_replace__WEBPACK_IMPORTED_MODULE_4__);
-/* harmony import */ var _FeedbackOrderForm_vue__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ./FeedbackOrderForm.vue */ "./resources/js/src/app/components/order/FeedbackOrderForm.vue");
-/* harmony import */ var _FeedbackOrderItem_vue__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ./FeedbackOrderItem.vue */ "./resources/js/src/app/components/order/FeedbackOrderItem.vue");
-/* harmony import */ var _mixins_loadFeedbackModule__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! ../../mixins/loadFeedbackModule */ "./resources/js/src/app/mixins/loadFeedbackModule.js");
-
-
+/* harmony import */ var core_js_modules_es_string_replace__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! core-js/modules/es.string.replace */ "./node_modules/core-js/modules/es.string.replace.js");
+/* harmony import */ var core_js_modules_es_string_replace__WEBPACK_IMPORTED_MODULE_2___default = /*#__PURE__*/__webpack_require__.n(core_js_modules_es_string_replace__WEBPACK_IMPORTED_MODULE_2__);
+/* harmony import */ var _FeedbackOrderForm_vue__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./FeedbackOrderForm.vue */ "./resources/js/src/app/components/order/FeedbackOrderForm.vue");
+/* harmony import */ var _FeedbackOrderItem_vue__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./FeedbackOrderItem.vue */ "./resources/js/src/app/components/order/FeedbackOrderItem.vue");
+/* harmony import */ var _mixins_loadFeedbackModule__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ../../mixins/loadFeedbackModule */ "./resources/js/src/app/mixins/loadFeedbackModule.js");
 
 
 
@@ -75,10 +69,10 @@ __webpack_require__.r(__webpack_exports__);
 
 /* harmony default export */ __webpack_exports__["default"] = ({
   components: {
-    'feedback-order-form': _FeedbackOrderForm_vue__WEBPACK_IMPORTED_MODULE_5__.default,
-    'feedback-order-item': _FeedbackOrderItem_vue__WEBPACK_IMPORTED_MODULE_6__.default
+    'feedback-order-form': _FeedbackOrderForm_vue__WEBPACK_IMPORTED_MODULE_3__.default,
+    'feedback-order-item': _FeedbackOrderItem_vue__WEBPACK_IMPORTED_MODULE_4__.default
   },
-  mixins: [_mixins_loadFeedbackModule__WEBPACK_IMPORTED_MODULE_7__.default],
+  mixins: [_mixins_loadFeedbackModule__WEBPACK_IMPORTED_MODULE_5__.default],
   props: {
     variations: Object,
     items: Array,
@@ -89,14 +83,16 @@ __webpack_require__.r(__webpack_exports__);
     accessKey: String,
     orderId: String
   },
-  data: function data() {
+
+  data() {
     return {
       isLoading: true,
       page: 1
     };
   },
+
   computed: {
-    orderItems: function orderItems() {
+    orderItems() {
       var aggregate = [];
 
       for (var i = 0; i < this.items.length; i++) {
@@ -129,15 +125,19 @@ __webpack_require__.r(__webpack_exports__);
 
       return aggregate;
     },
-    pagination: function pagination() {
+
+    pagination() {
       var amount = this.page * this.options.itemsPerRow * this.options.rowsPerPage;
       return this.orderItems.slice(0, amount);
     },
-    trueItemsPerRow: function trueItemsPerRow() {
+
+    trueItemsPerRow() {
       return Math.min(this.orderItems.length, this.options.itemsPerRow);
     }
+
   },
-  mounted: function mounted() {
+
+  mounted() {
     var _this = this;
 
     $.when(this.getUser()).done(function () {
@@ -148,8 +148,9 @@ __webpack_require__.r(__webpack_exports__);
       });
     });
   },
+
   methods: {
-    getUser: function getUser() {
+    getUser() {
       // Get array of item and variationIds
       var itemIds = [];
       var variationIds = [];
@@ -178,14 +179,16 @@ __webpack_require__.r(__webpack_exports__);
         variationId: this.variationId
       });
     },
-    nextPage: function nextPage() {
+
+    nextPage() {
       var amount = this.page * this.options.itemsPerRow * this.options.rowsPerPage;
 
       if (amount < this.orderItems.length) {
         this.page += 1;
       }
     },
-    filterItemName: function filterItemName(itemName, bundleType) {
+
+    filterItemName(itemName, bundleType) {
       if (bundleType === 'bundle') {
         return itemName.replace('[BUNDLE]', '');
       }
@@ -196,6 +199,7 @@ __webpack_require__.r(__webpack_exports__);
 
       return itemName;
     }
+
   }
 });
 
@@ -208,14 +212,11 @@ __webpack_require__.r(__webpack_exports__);
 /*! namespace exports */
 /*! export default [provided] [no usage info] [missing usage info prevents renaming] */
 /*! other exports [not provided] [no usage info] */
-/*! runtime requirements: __webpack_require__, __webpack_require__.n, __webpack_exports__, __webpack_require__.r, __webpack_require__.* */
+/*! runtime requirements: __webpack_exports__, __webpack_require__.r, __webpack_require__.* */
 /***/ (function(__unused_webpack_module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
-/* harmony import */ var core_js_modules_es_number_constructor__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! core-js/modules/es.number.constructor */ "./node_modules/core-js/modules/es.number.constructor.js");
-/* harmony import */ var core_js_modules_es_number_constructor__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(core_js_modules_es_number_constructor__WEBPACK_IMPORTED_MODULE_0__);
-
 //
 //
 //
@@ -426,9 +427,11 @@ __webpack_require__.r(__webpack_exports__);
       var key = this.item.itemId;
       return this.authenticatedUser.limitReached[key];
     },
-    authenticatedUser: function authenticatedUser() {
+
+    authenticatedUser() {
       return this.$store.state.feedback.authenticatedUser;
     }
+
   },
   mounted: function mounted() {
     var _self = this;
@@ -511,14 +514,11 @@ __webpack_require__.r(__webpack_exports__);
 /*! namespace exports */
 /*! export default [provided] [no usage info] [missing usage info prevents renaming] */
 /*! other exports [not provided] [no usage info] */
-/*! runtime requirements: __webpack_require__, __webpack_require__.n, __webpack_exports__, __webpack_require__.r, __webpack_require__.* */
+/*! runtime requirements: __webpack_exports__, __webpack_require__.r, __webpack_require__.* */
 /***/ (function(__unused_webpack_module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
-/* harmony import */ var core_js_modules_es_number_constructor__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! core-js/modules/es.number.constructor */ "./node_modules/core-js/modules/es.number.constructor.js");
-/* harmony import */ var core_js_modules_es_number_constructor__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(core_js_modules_es_number_constructor__WEBPACK_IMPORTED_MODULE_0__);
-
 //
 //
 //
@@ -582,7 +582,8 @@ __webpack_require__.r(__webpack_exports__);
     item: Object,
     numberOfColumns: Number
   },
-  data: function data() {
+
+  data() {
     return {
       isRated: false,
       feedback: {
@@ -596,8 +597,9 @@ __webpack_require__.r(__webpack_exports__);
       }
     };
   },
+
   computed: {
-    starIds: function starIds() {
+    starIds() {
       var ids = [];
       var starClass = this.isRated ? 'star-rated' : 'star';
 
@@ -611,8 +613,10 @@ __webpack_require__.r(__webpack_exports__);
 
       return ids;
     }
+
   },
-  mounted: function mounted() {
+
+  mounted() {
     var _this = this;
 
     vueEventHub.$on('orderItemFeedback_created', function (event) {
@@ -622,8 +626,9 @@ __webpack_require__.r(__webpack_exports__);
       }
     });
   },
+
   methods: {
-    handleRating: function handleRating(value) {
+    handleRating(value) {
       if (!this.isRated && value > 0) {
         this.feedback.ratingValue = value;
       }
@@ -634,6 +639,7 @@ __webpack_require__.r(__webpack_exports__);
         isRated: this.isRated
       });
     }
+
   }
 });
 
@@ -654,13 +660,14 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _store_FeedbackModule__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../store/FeedbackModule */ "./resources/js/src/app/store/FeedbackModule.js");
 
 /* harmony default export */ __webpack_exports__["default"] = ({
-  created: function created() {
+  created() {
     if (!this.$store.hasModule('feedback') && !App.isSSR) {
       this.$store.registerModule('feedback', _store_FeedbackModule__WEBPACK_IMPORTED_MODULE_0__.default, {
         preserveState: !!this.$store.state.feedback
       });
     }
   }
+
 });
 
 /***/ }),
@@ -704,26 +711,32 @@ var state = function state() {
 };
 
 var mutations = {
-  setFeedbackAuthenticatedUser: function setFeedbackAuthenticatedUser(state, authenticatedUser) {
+  setFeedbackAuthenticatedUser(state, authenticatedUser) {
     state.authenticatedUser = authenticatedUser;
   },
-  setFeedbackCounts: function setFeedbackCounts(state, counts) {
+
+  setFeedbackCounts(state, counts) {
     state.counts = counts;
   },
-  setFeedbacks: function setFeedbacks(state, feedbacks) {
+
+  setFeedbacks(state, feedbacks) {
     state.feedbacks = state.feedbacks.concat(feedbacks);
   },
-  setFeedbackItemAttributes: function setFeedbackItemAttributes(state, attributes) {
+
+  setFeedbackItemAttributes(state, attributes) {
     state.itemAttributes = attributes;
   },
-  setFeedbackPagination: function setFeedbackPagination(state, pagination) {
+
+  setFeedbackPagination(state, pagination) {
     state.pagination.lastPage = pagination.lastPage;
     state.pagination.isLastPage = pagination.isLastPage;
   },
-  incrementCurrentFeedbackPage: function incrementCurrentFeedbackPage(state) {
+
+  incrementCurrentFeedbackPage(state) {
     state.pagination.currentPage++;
   },
-  addFeedback: function addFeedback(state, feedback) {
+
+  addFeedback(state, feedback) {
     // Add the feedback to the current users feedback list
     state.authenticatedUser.feedbacks.unshift(feedback);
 
@@ -737,7 +750,8 @@ var mutations = {
       }
     }
   },
-  deleteFeedback: function deleteFeedback(state, _ref) {
+
+  deleteFeedback(state, _ref) {
     var feedbackId = _ref.feedbackId,
         parentFeedbackId = _ref.parentFeedbackId,
         feedback = _ref.feedback;
@@ -761,9 +775,10 @@ var mutations = {
       state.authenticatedUser.feedbacks = filterReplyList(state.authenticatedUser.feedbacks, parentFeedbackId, feedbackId);
     }
   }
+
 };
 var actions = {
-  loadFeedbackUser: function loadFeedbackUser(_ref2, _ref3) {
+  loadFeedbackUser(_ref2, _ref3) {
     var commit = _ref2.commit;
     var data = _ref3.data,
         itemId = _ref3.itemId,
@@ -792,7 +807,8 @@ var actions = {
       });
     }
   },
-  loadFeedbackCounts: function loadFeedbackCounts(_ref4, itemId) {
+
+  loadFeedbackCounts(_ref4, itemId) {
     var commit = _ref4.commit,
         state = _ref4.state;
 
@@ -810,7 +826,8 @@ var actions = {
       });
     }
   },
-  loadPaginatedFeedbacks: function loadPaginatedFeedbacks(_ref5, _ref6) {
+
+  loadPaginatedFeedbacks(_ref5, _ref6) {
     var commit = _ref5.commit,
         state = _ref5.state;
     var itemId = _ref6.itemId,
@@ -839,7 +856,8 @@ var actions = {
       return request;
     }
   },
-  deleteFeedback: function deleteFeedback(_ref7, _ref8) {
+
+  deleteFeedback(_ref7, _ref8) {
     var commit = _ref7.commit,
         state = _ref7.state;
     var feedbackId = _ref8.feedbackId,
@@ -857,14 +875,15 @@ var actions = {
       }
     });
   }
+
 };
 var getters = {};
 var countsLoaded = false;
 /* harmony default export */ __webpack_exports__["default"] = ({
-  state: state,
-  mutations: mutations,
-  actions: actions,
-  getters: getters
+  state,
+  mutations,
+  actions,
+  getters
 }); // Utility functions
 
 function filterFeedbackList(feedbackList, feedbackId) {
@@ -896,6 +915,30 @@ function recalculateAverage(state) {
   average /= state.counts.ratingsCountTotal;
   state.counts.averageValue = average;
 }
+
+/***/ }),
+
+/***/ "./node_modules/core-js/internals/array-method-is-strict.js":
+/*!******************************************************************!*\
+  !*** ./node_modules/core-js/internals/array-method-is-strict.js ***!
+  \******************************************************************/
+/*! unknown exports (runtime-defined) */
+/*! runtime requirements: module, __webpack_require__ */
+/*! CommonJS bailout: module.exports is used directly at 4:0-14 */
+/***/ (function(module, __unused_webpack_exports, __webpack_require__) {
+
+"use strict";
+
+var fails = __webpack_require__(/*! ../internals/fails */ "./node_modules/core-js/internals/fails.js");
+
+module.exports = function (METHOD_NAME, argument) {
+  var method = [][METHOD_NAME];
+  return !!method && fails(function () {
+    // eslint-disable-next-line no-useless-call,no-throw-literal -- required for testing
+    method.call(null, argument || function () { throw 1; }, 1);
+  });
+};
+
 
 /***/ }),
 

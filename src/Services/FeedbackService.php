@@ -63,6 +63,7 @@ class FeedbackService
      */
     public function getCounts($itemId = -1)
     {
+        $start = microtime(true);
         // Coalesce to default value in case of missing itemId
         $average = (int)$itemId > 0 ? $this->feedbackAverageRepository->getFeedbackAverage($itemId) : [];
 
@@ -94,6 +95,10 @@ class FeedbackService
         }
 
         $data['counts'] = $counts;
+        $end = microtime(true);
+        $this->getLogger(__FUNCTION__)->error("Time", [
+            "Time:" => $end - $start
+        ]);
         return $data;
     }
 
@@ -260,6 +265,7 @@ class FeedbackService
      */
     public function paginate($itemId, $page, $itemsPerPage = 50)
     {
+        $start = microtime(true);
         $lang = $this->localizationRepository->getLanguage();
         $itemVariations = [];
         $itemDataList = [];
@@ -346,7 +352,10 @@ class FeedbackService
                 );
             }
         }
-
+        $end = microtime(true);
+        $this->getLogger(__FUNCTION__)->error("Pagination Time", [
+            "Time" => $end - $start
+        ]);
         return [
             'feedbacks' => $feedbackResults,
             'itemAttributes' => $itemAttributes,

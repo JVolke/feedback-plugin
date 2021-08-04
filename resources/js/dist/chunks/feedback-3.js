@@ -254,7 +254,8 @@ __webpack_require__.r(__webpack_exports__);
     classes: String,
     styles: String
   },
-  data: function data() {
+
+  data() {
     return {
       isLoading: true,
       feedbackToDelete: null,
@@ -270,6 +271,7 @@ __webpack_require__.r(__webpack_exports__);
       }
     };
   },
+
   computed: {
     currentVariation: function currentVariation() {
       return this.$store.getters[this.itemId + '/currentItemVariation'];
@@ -277,20 +279,26 @@ __webpack_require__.r(__webpack_exports__);
     variationId: function variationId() {
       return this.currentVariation && this.currentVariation.variation.id;
     },
-    authenticatedUser: function authenticatedUser() {
+
+    authenticatedUser() {
       return this.$store.state.feedback.authenticatedUser;
     },
-    counts: function counts() {
+
+    counts() {
       return this.$store.state.feedback.counts;
     },
-    feedbacks: function feedbacks() {
+
+    feedbacks() {
       return this.$store.state.feedback.feedbacks;
     },
-    pagination: function pagination() {
+
+    pagination() {
       return this.$store.state.feedback.pagination;
     }
+
   },
-  mounted: function mounted() {
+
+  mounted() {
     if (!App.isShopBuilder) {
       var _self = this;
 
@@ -305,8 +313,9 @@ __webpack_require__.r(__webpack_exports__);
       this.isLoading = false;
     }
   },
+
   methods: {
-    getUser: function getUser() {
+    getUser() {
       return this.$store.dispatch('loadFeedbackUser', {
         data: {
           allowFeedbacksOnlyIfPurchased: this.options.allowFeedbacksOnlyIfPurchased,
@@ -316,20 +325,24 @@ __webpack_require__.r(__webpack_exports__);
         variationId: this.variationId
       });
     },
-    getCounts: function getCounts() {
+
+    getCounts() {
       return this.$store.dispatch('loadFeedbackCounts', this.itemId);
     },
-    loadFeedbacks: function loadFeedbacks() {
+
+    loadFeedbacks() {
       return this.$store.dispatch('loadPaginatedFeedbacks', {
         itemId: this.itemId,
         feedbacksPerPage: this.options.feedbacksPerPage
       });
     },
-    showDeleteConfirmation: function showDeleteConfirmation(feedbackToDelete) {
+
+    showDeleteConfirmation(feedbackToDelete) {
       this.feedbackToDelete = feedbackToDelete;
       $(this.$refs.confirmDeleteModal).modal('show');
     },
-    deleteFeedback: function deleteFeedback() {
+
+    deleteFeedback() {
       if (this.feedbackToDelete !== null) {
         var feedbackId = this.feedbackToDelete.feedbackId;
         var parentFeedbackId = this.feedbackToDelete.parentFeedbackId;
@@ -342,6 +355,7 @@ __webpack_require__.r(__webpack_exports__);
 
       $(this.$refs.confirmDeleteModal).modal('hide');
     }
+
   }
 });
 
@@ -354,14 +368,11 @@ __webpack_require__.r(__webpack_exports__);
 /*! namespace exports */
 /*! export default [provided] [no usage info] [missing usage info prevents renaming] */
 /*! other exports [not provided] [no usage info] */
-/*! runtime requirements: __webpack_require__, __webpack_require__.n, __webpack_exports__, __webpack_require__.r, __webpack_require__.* */
+/*! runtime requirements: __webpack_exports__, __webpack_require__.r, __webpack_require__.* */
 /***/ (function(__unused_webpack_module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
-/* harmony import */ var core_js_modules_es_number_constructor__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! core-js/modules/es.number.constructor */ "./node_modules/core-js/modules/es.number.constructor.js");
-/* harmony import */ var core_js_modules_es_number_constructor__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(core_js_modules_es_number_constructor__WEBPACK_IMPORTED_MODULE_0__);
-
 //
 //
 //
@@ -512,7 +523,8 @@ __webpack_require__.r(__webpack_exports__);
     variationId: Number,
     options: Object
   },
-  data: function data() {
+
+  data() {
     return {
       feedback: {
         ratingValue: 0,
@@ -528,13 +540,15 @@ __webpack_require__.r(__webpack_exports__);
       ratingMissing: false
     };
   },
+
   computed: {
-    authenticatedUser: function authenticatedUser() {
+    authenticatedUser() {
       return this.$store.state.feedback.authenticatedUser;
     }
+
   },
   methods: {
-    createFeedback: function createFeedback() {
+    createFeedback() {
       var _this = this;
 
       if (this.isLoading) {
@@ -583,9 +597,11 @@ __webpack_require__.r(__webpack_exports__);
         }
       });
     },
-    createLoginModal: function createLoginModal() {
+
+    createLoginModal() {
       this.$store.dispatch('loadComponent', 'login-modal');
     }
+
   }
 });
 
@@ -642,9 +658,10 @@ __webpack_require__.r(__webpack_exports__);
     options: Object
   },
   methods: {
-    onLoadMoreClicked: function onLoadMoreClicked() {
+    onLoadMoreClicked() {
       this.$emit('load-more');
     }
+
   }
 });
 
@@ -807,7 +824,7 @@ __webpack_require__.r(__webpack_exports__);
   name: 'FeedbackListEntry',
   components: {
     'feedback-comment': function feedbackComment() {
-      return Promise.all(/*! import() */[__webpack_require__.e(6), __webpack_require__.e(2)]).then(__webpack_require__.bind(__webpack_require__, /*! ./FeedbackComment.vue */ "./resources/js/src/app/components/item/singleitem/FeedbackComment.vue"));
+      return Promise.all(/*! import() */[__webpack_require__.e(6), __webpack_require__.e(5), __webpack_require__.e(2)]).then(__webpack_require__.bind(__webpack_require__, /*! ./FeedbackComment.vue */ "./resources/js/src/app/components/item/singleitem/FeedbackComment.vue"));
     }
   },
   props: {
@@ -818,23 +835,28 @@ __webpack_require__.r(__webpack_exports__);
     styles: String,
     options: Object
   },
-  data: function data() {
+
+  data() {
     return {
       editableFeedback: null,
       isLoading: false,
       feedbackData: {}
     };
   },
+
   computed: {
-    authenticatedUser: function authenticatedUser() {
+    authenticatedUser() {
       return this.$store.state.feedback.authenticatedUser;
     }
+
   },
-  created: function created() {
+
+  created() {
     this.feedbackData = this.feedback;
   },
+
   methods: {
-    showDeleteConfirmation: function showDeleteConfirmation() {
+    showDeleteConfirmation() {
       var parentFeedbackId = null;
 
       if (this.isReply) {
@@ -848,7 +870,8 @@ __webpack_require__.r(__webpack_exports__);
         feedbackObject: this.feedbackData
       });
     },
-    editFeedback: function editFeedback() {
+
+    editFeedback() {
       if (this.editableFeedback === null) {
         $(this.$refs.editButton).tooltip('dispose');
         this.editableFeedback = {
@@ -864,7 +887,8 @@ __webpack_require__.r(__webpack_exports__);
         }
       }
     },
-    saveEditableFeedback: function saveEditableFeedback() {
+
+    saveEditableFeedback() {
       var _self = this;
 
       if (this.editableFeedback !== null) {
@@ -903,6 +927,7 @@ __webpack_require__.r(__webpack_exports__);
 
       this.editableFeedback = null;
     }
+
   }
 });
 
@@ -923,13 +948,14 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _store_FeedbackModule__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../store/FeedbackModule */ "./resources/js/src/app/store/FeedbackModule.js");
 
 /* harmony default export */ __webpack_exports__["default"] = ({
-  created: function created() {
+  created() {
     if (!this.$store.hasModule('feedback') && !App.isSSR) {
       this.$store.registerModule('feedback', _store_FeedbackModule__WEBPACK_IMPORTED_MODULE_0__.default, {
         preserveState: !!this.$store.state.feedback
       });
     }
   }
+
 });
 
 /***/ }),
@@ -973,26 +999,32 @@ var state = function state() {
 };
 
 var mutations = {
-  setFeedbackAuthenticatedUser: function setFeedbackAuthenticatedUser(state, authenticatedUser) {
+  setFeedbackAuthenticatedUser(state, authenticatedUser) {
     state.authenticatedUser = authenticatedUser;
   },
-  setFeedbackCounts: function setFeedbackCounts(state, counts) {
+
+  setFeedbackCounts(state, counts) {
     state.counts = counts;
   },
-  setFeedbacks: function setFeedbacks(state, feedbacks) {
+
+  setFeedbacks(state, feedbacks) {
     state.feedbacks = state.feedbacks.concat(feedbacks);
   },
-  setFeedbackItemAttributes: function setFeedbackItemAttributes(state, attributes) {
+
+  setFeedbackItemAttributes(state, attributes) {
     state.itemAttributes = attributes;
   },
-  setFeedbackPagination: function setFeedbackPagination(state, pagination) {
+
+  setFeedbackPagination(state, pagination) {
     state.pagination.lastPage = pagination.lastPage;
     state.pagination.isLastPage = pagination.isLastPage;
   },
-  incrementCurrentFeedbackPage: function incrementCurrentFeedbackPage(state) {
+
+  incrementCurrentFeedbackPage(state) {
     state.pagination.currentPage++;
   },
-  addFeedback: function addFeedback(state, feedback) {
+
+  addFeedback(state, feedback) {
     // Add the feedback to the current users feedback list
     state.authenticatedUser.feedbacks.unshift(feedback);
 
@@ -1006,7 +1038,8 @@ var mutations = {
       }
     }
   },
-  deleteFeedback: function deleteFeedback(state, _ref) {
+
+  deleteFeedback(state, _ref) {
     var feedbackId = _ref.feedbackId,
         parentFeedbackId = _ref.parentFeedbackId,
         feedback = _ref.feedback;
@@ -1030,9 +1063,10 @@ var mutations = {
       state.authenticatedUser.feedbacks = filterReplyList(state.authenticatedUser.feedbacks, parentFeedbackId, feedbackId);
     }
   }
+
 };
 var actions = {
-  loadFeedbackUser: function loadFeedbackUser(_ref2, _ref3) {
+  loadFeedbackUser(_ref2, _ref3) {
     var commit = _ref2.commit;
     var data = _ref3.data,
         itemId = _ref3.itemId,
@@ -1061,7 +1095,8 @@ var actions = {
       });
     }
   },
-  loadFeedbackCounts: function loadFeedbackCounts(_ref4, itemId) {
+
+  loadFeedbackCounts(_ref4, itemId) {
     var commit = _ref4.commit,
         state = _ref4.state;
 
@@ -1079,7 +1114,8 @@ var actions = {
       });
     }
   },
-  loadPaginatedFeedbacks: function loadPaginatedFeedbacks(_ref5, _ref6) {
+
+  loadPaginatedFeedbacks(_ref5, _ref6) {
     var commit = _ref5.commit,
         state = _ref5.state;
     var itemId = _ref6.itemId,
@@ -1108,7 +1144,8 @@ var actions = {
       return request;
     }
   },
-  deleteFeedback: function deleteFeedback(_ref7, _ref8) {
+
+  deleteFeedback(_ref7, _ref8) {
     var commit = _ref7.commit,
         state = _ref7.state;
     var feedbackId = _ref8.feedbackId,
@@ -1126,14 +1163,15 @@ var actions = {
       }
     });
   }
+
 };
 var getters = {};
 var countsLoaded = false;
 /* harmony default export */ __webpack_exports__["default"] = ({
-  state: state,
-  mutations: mutations,
-  actions: actions,
-  getters: getters
+  state,
+  mutations,
+  actions,
+  getters
 }); // Utility functions
 
 function filterFeedbackList(feedbackList, feedbackId) {

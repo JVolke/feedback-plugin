@@ -38,14 +38,14 @@ module.exports = env =>
             ]
         },
         plugins: [
-            new VueLoaderPlugin({
+      new VueLoaderPlugin({
                 exposeFilename: true
             }),
-            new ESLintPlugin({
+      new ESLintPlugin({
                 extensions: ['js', 'vue'],
                 context: path.resolve(__dirname, "..", "..", "resources/js/src/"),
                 fix: true
-            }),
+      }),
             new WebpackRequireFrom({
                 replaceSrcMethodName: "__loadPluginChunk"
             })
