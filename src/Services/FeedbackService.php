@@ -63,7 +63,6 @@ class FeedbackService
      */
     public function getCounts($itemId = -1)
     {
-        $start = microtime(true);
         // Coalesce to default value in case of missing itemId
         $average = (int)$itemId > 0 ? $this->feedbackAverageRepository->getFeedbackAverage($itemId) : [];
 
@@ -95,10 +94,6 @@ class FeedbackService
         }
 
         $data['counts'] = $counts;
-        $end = microtime(true);
-        $this->getLogger(__FUNCTION__)->error("Time", [
-            "Time:" => $end - $start
-        ]);
         return $data;
     }
 
@@ -265,7 +260,6 @@ class FeedbackService
      */
     public function paginate($itemId, $page, $itemsPerPage = 50)
     {
-        $start = microtime(true);
         $lang = $this->localizationRepository->getLanguage();
         $itemVariations = [];
         $itemDataList = [];
@@ -345,17 +339,21 @@ class FeedbackService
         );
         $feedbackResults = $feedbacks->getResult();
 
+        $i = 0;
         foreach ($feedbackResults as &$feedback) {
             if ($feedback->targetRelation->feedbackRelationType === 'variation') {
                 $feedback->targetRelation->variationAttributes = json_decode(
                     $feedback->targetRelation->targetRelationName
                 );
             }
+            if(($feedback->sourceRelation[0]->feedbackRelationType  === 'user' || $feedback->sourceRelation[0]->feedbackRelationType === 'contact' )
+                && $feedback->sourceRelation[0]->feedbackRelationSourceId > 0 && !(trim($feedback->authorName) > 0) )
+            {
+                $feedback->authorName = $feedback->sourceRelation[0]->sourceRelationLabel;
+            }
+            $this->getLogger(__METHOD__)->error("feedback".$i, $feedback);
+            $i++;
         }
-        $end = microtime(true);
-        $this->getLogger(__FUNCTION__)->error("Pagination Time", [
-            "Time" => $end - $start
-        ]);
         return [
             'feedbacks' => $feedbackResults,
             'itemAttributes' => $itemAttributes,
