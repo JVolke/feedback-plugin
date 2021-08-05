@@ -338,8 +338,7 @@ class FeedbackService
             $filters
         );
         $feedbackResults = $feedbacks->getResult();
-
-        $i = 0;
+        
         foreach ($feedbackResults as &$feedback) {
             if ($feedback->targetRelation->feedbackRelationType === 'variation') {
                 $feedback->targetRelation->variationAttributes = json_decode(
@@ -351,8 +350,6 @@ class FeedbackService
             {
                 $feedback->authorName = $feedback->sourceRelation[0]->sourceRelationLabel;
             }
-            $this->getLogger(__METHOD__)->error("feedback".$i, $feedback);
-            $i++;
         }
         return [
             'feedbacks' => $feedbackResults,
