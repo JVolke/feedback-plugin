@@ -20,6 +20,7 @@
                  },
                 "review": [
                          {% for feedback in feedbackList.feedbacks %}
+                         {
                                 "@type"             : "Review",
                                   {# Todo: Bette solution #}
                                 {% if feedback.authorName |trim | length <= 0  %}
