@@ -3,8 +3,6 @@
     {% set feedbackList = feedbackServices.feedback.paginate(item.documents[0].data.item.id,1,50) %}
     {% set feedbackCounts = feedbackServices.feedback.getCounts(item.documents[0].data.item.id) %}
 
-    {{ feedbackList | json_encode }}
-
     {% if feedbackList.feedbacks | length > 0 %}
     <script type="application/ld+json">
     {
