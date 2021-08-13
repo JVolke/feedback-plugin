@@ -20,12 +20,7 @@
                          {% for feedback in feedbackList.feedbacks %}
                          {
                                 "@type"             : "Review",
-                                  {# Todo: Bette solution #}
-                                {% if feedback.authorName |trim | length <= 0  %}
-                                "author"            : "Unbekannt",
-                                {% else %}
                                 "author"            : "{{ feedback.authorName  }}",
-                                {% endif %}
                                 "datePublished"     : "{{ feedback.createdAt }}",
                                 "name"              : "{{ feedback.title }}",
                                 "reviewBody"       : "{{ feedback.feedbackComment.comment.message }}",
