@@ -5,7 +5,7 @@
     "feedbacksPerPage":10,
     "numberOfFeedbacks":1,
     "timestampVisibility":false,
-    "allowGuestFeedbacks":true
+    "allowGuestFeedbacks": {{  config("Feedback.allowGuestFeedbacks") | json  }}
 }
 %}
 <lazy-hydrate when-visible>
