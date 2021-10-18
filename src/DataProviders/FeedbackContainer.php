@@ -4,7 +4,6 @@ namespace Feedback\DataProviders;
 
 use Plenty\Plugin\ConfigRepository;
 use Plenty\Plugin\Templates\Twig;
-use
 
 class FeedbackContainer
 {
