@@ -94,7 +94,6 @@ class FeedbackService
         }
 
         $data['counts'] = $counts;
-
         return $data;
     }
 
@@ -256,9 +255,10 @@ class FeedbackService
      * Get an array of feedbacks by pagination
      * @param $itemId
      * @param $page
+     * @param int $itemsPerPage
      * @return array
      */
-    public function paginate($itemId, $page)
+    public function paginate($itemId, $page, $itemsPerPage = 50)
     {
         $lang = $this->localizationRepository->getLanguage();
         $itemVariations = [];
@@ -317,7 +317,10 @@ class FeedbackService
         }
 
         $page = isset($page) && $page != 0 ? $page : 1;
-        $itemsPerPage = (int)$this->request->input('feedbacksPerPage');
+        if (((int)$this->request->input('feedbacksPerPage')))
+        {
+            $itemsPerPage = (int)$this->request->input('feedbacksPerPage');
+        }
         $with = [];
         $filters = [
             'isVisible' => 1,
@@ -335,15 +338,19 @@ class FeedbackService
             $filters
         );
         $feedbackResults = $feedbacks->getResult();
-
+        
         foreach ($feedbackResults as &$feedback) {
             if ($feedback->targetRelation->feedbackRelationType === 'variation') {
                 $feedback->targetRelation->variationAttributes = json_decode(
                     $feedback->targetRelation->targetRelationName
                 );
             }
+            if(($feedback->sourceRelation[0]->feedbackRelationType  === 'user' || $feedback->sourceRelation[0]->feedbackRelationType === 'contact' )
+                && $feedback->sourceRelation[0]->feedbackRelationSourceId > 0 && !(trim($feedback->authorName) > 0) )
+            {
+                $feedback->authorName = $feedback->sourceRelation[0]->sourceRelationLabel;
+            }
         }
-
         return [
             'feedbacks' => $feedbackResults,
             'itemAttributes' => $itemAttributes,

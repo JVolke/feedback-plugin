@@ -10,8 +10,8 @@
     "author": "plentysystems AG",
     "type": "general",
     "require": {
-        "IO": ">=5.0.26",
-        "Ceres": ">=5.0.27"
+        "IO": ">=5.0.35",
+        "Ceres": ">=5.0.35"
     },
     "isClosedSource": false,
     "serviceProvider": "Feedback\\Providers\\FeedbackServiceProvider",
@@ -45,6 +45,11 @@
             "name": "Feedback category ratings",
             "description": "Feedback category ratings",
             "defaultLayoutContainer": "Ceres::CategoryItem.BeforePrices"
+        },
+        {
+            "key": "Feedback\\DataProviders\\FeedbackContainer",
+            "name": "Feedback Container",
+            "description": "Feedback Container for the old Ceres implementation"
         }
     ],
     "dependencies": {},

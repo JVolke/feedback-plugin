@@ -20,7 +20,8 @@
         "prebuild": "rm -rf resources/js/dist/chunks"
     },
     "browserslist": [
-        "> .25%"
+        "> .25%",
+        "not ie 11"
     ],
     "devDependencies": {
         "@babel/core": "^7.12.0",

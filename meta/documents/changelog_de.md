@@ -1,5 +1,8 @@
 # Release Notes für Feedback
 
+## tba 
+- Das JSON Markup für das Feedback wird jetzt via Twig gerendert 
+
 ## v4.0.4 (2021-07-06)
 
 ### TODO

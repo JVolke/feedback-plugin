@@ -1,0 +1,15 @@
+{%
+    set options = {
+    "allowFeedbacksOnlyIfPurchased": false,
+    "allowNoRatingFeedback": false,
+    "feedbacksPerPage":10,
+    "numberOfFeedbacks":1,
+    "timestampVisibility":false,
+    "allowGuestFeedbacks":allowGuest
+}
+%}
+<lazy-hydrate when-visible>
+    <feedback-container class="widget-inner"
+                        :options="{{ options | json_encode}}">
+    </feedback-container>
+</lazy-hydrate>
