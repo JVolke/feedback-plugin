@@ -145,6 +145,7 @@
 
 <script>
 export default {
+  name: 'FeedbackForm',
   props: {
     variationId: Number,
     options: Object
@@ -194,8 +195,6 @@ export default {
       }
 
       this.isLoading = true
-
-      this.feedback.options = this.options
 
       $.ajax({
         type: 'POST',

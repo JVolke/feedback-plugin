@@ -221,10 +221,12 @@
 <script>
 import FeedbackForm from './FeedbackForm.vue'
 import FeedbackList from './FeedbackList.vue'
+import { mapState } from 'vuex'
 import loadFeedbackModule from '../../../mixins/loadFeedbackModule'
 
 export default {
 
+  name: 'FeedbackContainer',
   components: {
     'feedback-form': FeedbackForm,
     'feedback-list': FeedbackList
@@ -271,20 +273,12 @@ export default {
         return this.currentVariation && this.currentVariation.variation.id
       },
 
-      authenticatedUser () {
-        return this.$store.state.feedback.authenticatedUser
-      },
-
-      counts () {
-        return this.$store.state.feedback.counts
-      },
-      feedbacks () {
-        return this.$store.state.feedback.feedbacks
-      },
-
-      pagination () {
-        return this.$store.state.feedback.pagination
-      }
+      ...mapState({
+        authenticatedUser: state => state.feedback.authenticatedUser,
+        counts: state => state.feedback.counts,
+        feedbacks: state => state.feedback.feedbacks,
+        pagination: state => state.feedback.pagination
+      })
     },
 
   mounted () {
@@ -296,6 +290,7 @@ export default {
         this.loadFeedbacks()
       ).done(function () {
         _self.isLoading = false
+        _self.generateJsonLD()
         Vue.nextTick(function () {
           // DOM updated
           window.dispatchEvent(new Event('resize'))
@@ -348,6 +343,58 @@ export default {
         }
 
         $(this.$refs.confirmDeleteModal).modal('hide')
+      },
+
+      generateJsonLD () {
+        if (this.counts.ratingsCountTotal > 0) {
+          const jsonld = {
+            '@context': 'http://schema.org/',
+            '@type': 'Product',
+            '@id': this.variationId.toString(),
+            aggregateRating: {
+              '@type': 'AggregateRating',
+              ratingValue: this.counts.averageValue,
+              reviewCount: this.counts.ratingsCountTotal
+            },
+            review: []
+          }
+
+          const anonymous = this.$translate('Feedback::Feedback.anonymous') || 'Anonymous'
+          this.feedbacks.forEach(function (feedback) {
+            let author
+
+            if ((feedback.sourceRelation[0].feedbackRelationType === 'user' ||
+                        feedback.sourceRelation[0].feedbackRelationType === 'contact') && feedback.sourceRelation[0].feedbackRelationSourceId > 0) {
+              author = feedback.sourceRelation[0].sourceRelationLabel
+            } else if (feedback.sourceRelation[0].feedbackRelationSourceId === '0' && feedback.authorName.trim().length > 0) {
+              author = feedback.authorName
+            } else {
+              author = anonymous
+            }
+
+            const review = {
+              '@type': 'Review',
+              author: {
+                name: author,
+                '@type': 'Person'
+              },
+              datePublished: feedback.createdAt,
+              reviewBody: feedback.feedbackComment.comment.message,
+              name: feedback.title,
+              reviewRating: {
+                '@type': 'Rating',
+                ratingValue: feedback.feedbackRating.rating.ratingValue
+              }
+            }
+
+            jsonld.review.push(review)
+          })
+
+          const script = document.createElement('script')
+          script.setAttribute('type', 'application/ld+json')
+          script.textContent = JSON.stringify(jsonld)
+          document.head.appendChild(script)
+        }
       }
     }
 }
