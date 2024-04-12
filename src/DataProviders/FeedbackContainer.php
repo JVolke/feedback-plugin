@@ -13,7 +13,7 @@ class FeedbackContainer
 
 
         return $twig->render('Feedback::DataProvider.FeedbackContainer', [
-            "allowGuest" => $configRepository->get("Feedback.allowGuestFeedbacks") == "true";
+            "allowGuest" => $configRepository->get("Feedback.allowGuestFeedbacks") == "true"
         ]);
     }
 }
