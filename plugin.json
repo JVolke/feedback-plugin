@@ -50,6 +50,11 @@
             "key": "Feedback\\DataProviders\\FeedbackContainer",
             "name": "Feedback Container",
             "description": "Feedback Container for the old Ceres implementation"
+        },
+        {
+            "key": "Feedback\\DataProviders\\FeedbackOrderContainer",
+            "name": "Feedback Order Container",
+            "description": "Feedback Container for the old Ceres implementation"
         }
     ],
     "dependencies": {},

@@ -14,6 +14,8 @@ use Plenty\Modules\Item\Attribute\Contracts\AttributeNameRepositoryContract;
 use Plenty\Modules\Item\Attribute\Contracts\AttributeValueNameRepositoryContract;
 use Plenty\Modules\Item\Item\Contracts\ItemRepositoryContract;
 use Plenty\Modules\Item\Variation\Contracts\VariationRepositoryContract;
+use Illuminate\Database\Eloquent\ModelNotFoundException;
+use Plenty\Modules\Feedback\Models\Feedback;
 use Plenty\Plugin\Log\Loggable;
 
 
@@ -94,6 +96,7 @@ class FeedbackService
         }
 
         $data['counts'] = $counts;
+
         return $data;
     }
 
@@ -143,18 +146,19 @@ class FeedbackService
             'ratingRelationTargetType' => 'feedbackRating'
         ];
 
+        $autoreleaseFeedbacks = (int)$this->coreHelper->configValue(
+            FeedbackCoreHelper::KEY_RELEASE_FEEDBACKS_AUTOMATICALLY
+        );
         // Check the type and set the target accordingly
         if ($this->request->input('type') === 'review') {
             $options['feedbackRelationTargetType'] = 'variation';
 
             // Limit the feedbacks count of a user per item
-            $numberOfFeedbacks = (int)$this->request->input('options.numberOfFeedbacks');
-            $autoreleaseFeedbacks = (int)$this->coreHelper->configValue(
-                FeedbackCoreHelper::KEY_RELEASE_FEEDBACKS_AUTOMATICALLY
-            );
+            $numberOfFeedbacks = $this->coreHelper->configValue(FeedbackCoreHelper::KEY_NUMBER_OF_FEEDBACKS);
+
             $options['isVisible'] = $this->determineVisibility($autoreleaseFeedbacks, $creatorContactId);
-            $allowNoRatingFeedbacks = $this->request->input('options.allowNoRatingFeedbacks') === 'true';
-            $allowFeedbacksOnlyIfPurchased = $this->request->input('options.allowFeedbacksOnlyIfPurchased') === 'true';
+            $allowNoRatingFeedbacks = $this->coreHelper->configValueAsBool(FeedbackCoreHelper::KEY_ALLOW_NO_RATING_FEEDBACK) === 'true';
+            $allowFeedbacksOnlyIfPurchased = $this->coreHelper->configValueAsBool(FeedbackCoreHelper::KEY_ALLOW_FEEDBACK_ONLY_IF_PURCHASED) === 'true';
 
             if ($allowNoRatingFeedbacks && empty($this->request->input('ratingValue'))) {
                 return 'Can\'t create review with no rating';
@@ -204,8 +208,15 @@ class FeedbackService
 
             return $result;
         } elseif ($this->request->input('type') === 'reply') {
+            $feedbackId     = (int) $options['feedbackRelationTargetId'];
+            $feedbackExists = $this->feedbackExists($feedbackId);
+
+            if (!$feedbackExists) {
+                return 'Feedback does not exist.';
+            }
+
             $options['feedbackRelationTargetType'] = 'feedback';
-            $options['isVisible'] = true;
+            $options['isVisible'] = $this->determineVisibility($autoreleaseFeedbacks, $creatorContactId);
 
             $feedbackRepository = $this->feedbackRepository;
             $feedbackObject = array_merge($this->request->all(), $options);
@@ -255,10 +266,9 @@ class FeedbackService
      * Get an array of feedbacks by pagination
      * @param $itemId
      * @param $page
-     * @param int $itemsPerPage
      * @return array
      */
-    public function paginate($itemId, $page, $itemsPerPage = 50)
+    public function paginate($itemId, $page)
     {
         $lang = $this->localizationRepository->getLanguage();
         $itemVariations = [];
@@ -317,10 +327,7 @@ class FeedbackService
         }
 
         $page = isset($page) && $page != 0 ? $page : 1;
-        if (((int)$this->request->input('feedbacksPerPage')))
-        {
-            $itemsPerPage = (int)$this->request->input('feedbacksPerPage');
-        }
+        $itemsPerPage = (int)$this->request->input('feedbacksPerPage');
         $with = [];
         $filters = [
             'isVisible' => 1,
@@ -338,19 +345,15 @@ class FeedbackService
             $filters
         );
         $feedbackResults = $feedbacks->getResult();
-        
+
         foreach ($feedbackResults as &$feedback) {
             if ($feedback->targetRelation->feedbackRelationType === 'variation') {
                 $feedback->targetRelation->variationAttributes = json_decode(
                     $feedback->targetRelation->targetRelationName
                 );
             }
-            if(($feedback->sourceRelation[0]->feedbackRelationType  === 'user' || $feedback->sourceRelation[0]->feedbackRelationType === 'contact' )
-                && $feedback->sourceRelation[0]->feedbackRelationSourceId > 0 && !(trim($feedback->authorName) > 0) )
-            {
-                $feedback->authorName = $feedback->sourceRelation[0]->sourceRelationLabel;
-            }
         }
+
         return [
             'feedbacks' => $feedbackResults,
             'itemAttributes' => $itemAttributes,
@@ -376,7 +379,7 @@ class FeedbackService
         }
 
         $allowFeedbacksOnlyIfPurchased = $this->request->input('allowFeedbacksOnlyIfPurchased') === 'true';
-        $numberOfFeedbacks = (int)$this->request->input('numberOfFeedbacks');
+        $numberOfFeedbacks = $this->coreHelper->configValue(FeedbackCoreHelper::KEY_NUMBER_OF_FEEDBACKS);
 
         $contactId = $this->accountService->getAccountContactId();
 
@@ -559,6 +562,42 @@ class FeedbackService
     }
 
     /**
+     * Get config values for the feedback widget
+     * @return array[]
+     */
+    public function getFrontendOptions()
+    {
+        $allowGuestFeedbacks = $this->coreHelper->configValueAsBool(FeedbackCoreHelper::KEY_ALLOW_GUEST_FEEDBACKS);
+        $numberOfFeedbacks = $this->coreHelper->configValue(FeedbackCoreHelper::KEY_NUMBER_OF_FEEDBACKS);
+        $allowFeedbacksOnlyIfPurchased = $this->coreHelper->configValueAsBool(FeedbackCoreHelper::KEY_ALLOW_FEEDBACK_ONLY_IF_PURCHASED);
+        $allowNoRatingFeedback = $this->coreHelper->configValueAsBool(FeedbackCoreHelper::KEY_ALLOW_NO_RATING_FEEDBACK);
+
+        return [
+            "allowFeedbacksOnlyIfPurchased" => $allowFeedbacksOnlyIfPurchased,
+            "allowNoRatingFeedback" => $allowNoRatingFeedback,
+            "numberOfFeedbacks" => $numberOfFeedbacks,
+            "allowGuestFeedbacks" => $allowGuestFeedbacks
+        ];
+    }
+
+    /**
+     * Get config values for the feedback order widget
+     * @return array
+     */
+    public function getOrderFrontendOptions()
+    {
+        $allowGuestFeedbacks = $this->coreHelper->configValueAsBool(FeedbackCoreHelper::KEY_ALLOW_GUEST_FEEDBACKS);
+        $numberOfFeedbacks = $this->coreHelper->configValue(FeedbackCoreHelper::KEY_NUMBER_OF_FEEDBACKS);
+        $showEmptyRatingsInOrderConfirmation = $this->coreHelper->configValue(FeedbackCoreHelper::KEY_SHOW_EMPTY_RATINGS_IN_ORDER_CONFIRMATION_VIEW);
+
+        return [
+            "numberOfFeedbacks" => $numberOfFeedbacks,
+            "allowGuestFeedbacks" => $allowGuestFeedbacks,
+            "showEmptyRatingsInOrderConfirmation" => $showEmptyRatingsInOrderConfirmation
+        ];
+    }
+
+    /**
      * Get raw feedbacks from the database
      * @return \Plenty\Repositories\Models\PaginatedResult
      */
@@ -603,6 +642,10 @@ class FeedbackService
         return $order;
     }
 
+    /**
+     * @param $order
+     * @return int|mixed
+     */
     private function getUserIdFromOrder($order)
     {
         if ($order !== null) {
@@ -614,5 +657,29 @@ class FeedbackService
         }
 
         return 0;
+    }
+
+    /**
+     * @param int $feedbackId
+     *
+     * @return bool
+     */
+    private function feedbackExists(int $feedbackId): bool
+    {
+        try {
+            /** @var Feedback $feedback */
+            $feedback = $this->feedbackRepository->getFeedback($feedbackId);
+        } catch (ModelNotFoundException $exception) {}
+
+        $this->getLogger(__METHOD__)->debug('Feedback::Debug.feedbackExistsResult', [
+            'expectedFeedbackId' => $feedbackId,
+            'obtainedFeedbackId' => $feedback->id ?? null
+        ]);
+
+        if ($feedback instanceof Feedback) {
+            return true;
+        }
+
+        return false;
     }
 }

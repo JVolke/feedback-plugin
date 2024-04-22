@@ -1,0 +1,38 @@
+{% set configOptions = feedbackServices.feedback.getOrderFrontendOptions %}
+
+{% set hideWidget = false  %}
+{% set hideWhenNotCompleted = true  %}
+{% set options = configOptions | merge({ 'itemsPerRow': 4 , 'rowsPerPage': 2 }) %}
+
+{% if(data.order is defined and data.order is not null and urls.is('confirmation')) %}
+    {%  if(hideWhenNotCompleted is same as (true) and data.order.dates is defined and data.order.dates is not null) %}
+        {% set hideWidget = true %}
+        {% for dates in data.order.dates %}
+            {% if dates.typeId is same as (5) %}
+                {% set hideWidget = false  %}
+            {% endif %}
+        {% endfor %}
+    {% endif %}
+{% endif %}
+
+{% if hideWidget is same as (false) %}
+<div class="widget widget-feedback-orderconfirmation primary">
+    <feedback-order-container
+            :variations="{{ data.variations | json_encode }}"
+            :items="{{ data.order.orderItems | json_encode }}"
+            :item-urls="{{ data.itemURLs | json_encode }}"
+            :item-images="{{ data.itemImages | json_encode }}"
+            :options="{{ options | json_encode }}"
+            :split-item-bundles="{{ 0 | json_encode }}"
+            access-key="{{ feedbackServices.feedback.getOrderAccessKey(data.order.id) }}"
+            order-id="{{ data.order.id | json_encode }}">
+    </feedback-order-container>
+</div>
+{% elseif isPreview | json_encode and not urls.is('confirmation') %}
+<div class="widget-placeholder">
+    <div>
+        <p class="title">{{ Twig.trans("Feedback::Widget.feedbackLabel") }}</p>
+        <p class="description">{{ Twig.trans("Feedback::Widget.feedbackOrderitemPlaceholderDescription") }}</p>
+    </div>
+</div>
+{% endif %}

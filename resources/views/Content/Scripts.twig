@@ -1,4 +1,4 @@
-{% if urls.is("item") %}
+{% if urls.is("item") or urls.is("confirmation") %}
 <script type="text/javascript">
     window.feedbackPublicPath = "{{ plugin_path('Feedback') ~ '/js/dist/' }}"
 </script>
