@@ -208,7 +208,7 @@ class FeedbackService
             $feedbackObject = array_merge($this->request->all(), $options);
             if ($sessionStorage->getPlugin()->getValue('Feedback') === 1)
             {
-                $result = 'Aktuell kann nur eine Bewertung pro Tag abgegeben werden.';
+                $result = 'Please Wait until before the next feedback.';
             } else {
                 $result = $authHelper->processUnguarded(
                     function () use ($feedbackRepository, $feedbackObject) {
