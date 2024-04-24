@@ -3,6 +3,7 @@
 namespace Feedback\Services;
 
 use Plenty\Modules\Authorization\Services\AuthHelper;
+use Plenty\Modules\Frontend\Session\Storage\Contracts\FrontendSessionStorageFactoryContract;
 use Plenty\Modules\Webshop\Contracts\LocalizationRepositoryContract;
 use Plenty\Plugin\Http\Request;
 use Feedback\Helpers\FeedbackCoreHelper;
@@ -106,6 +107,8 @@ class FeedbackService
      */
     public function create()
     {
+        $sessionStorage = pluginApp(FrontendSessionStorageFactoryContract::class);
+
         // Find out if current user is a contact or a guest (0 is guest, anything else is contact)
         $authHelper = pluginApp(AuthHelper::class);
         $accountService = $this->accountService;
@@ -199,12 +202,17 @@ class FeedbackService
 
             $feedbackRepository = $this->feedbackRepository;
             $feedbackObject = array_merge($this->request->all(), $options);
-
-            $result = $authHelper->processUnguarded(
-                function () use ($feedbackRepository, $feedbackObject) {
-                    return $feedbackRepository->createFeedback($feedbackObject);
-                }
-            );
+            if ($sessionStorage->getPlugin()->getValue('Feedback') === 1)
+            {
+                $result = 'Aktuell kann nur eine Bewertung pro Tag abgegeben werden.';
+            } else {
+                $result = $authHelper->processUnguarded(
+                    function () use ($feedbackRepository, $feedbackObject) {
+                        return $feedbackRepository->createFeedback($feedbackObject);
+                    }
+                );
+                $sessionStorage->getPlugin()->setValue('Feedback', 1);
+            }
 
             return $result;
         } elseif ($this->request->input('type') === 'reply') {
@@ -226,7 +234,6 @@ class FeedbackService
                     return $feedbackRepository->createFeedback($feedbackObject);
                 }
             );
-
             return $result;
         }
     }
