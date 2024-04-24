@@ -170,6 +170,10 @@ class FeedbackService
             // The following checks cannot be applied to guests
             if ($creatorContactId != 0 || !is_null($order)) {
                 $hasPurchased = !is_null($order) || $this->hasPurchasedVariation($creatorContactId, $this->request->input('targetId'));
+                if ($sessionStorage->getPlugin()->getValue('Feedback') === 1)
+                {
+                    $sessionStorage->getPlugin()->setValue('Feedback', 0);
+                }
 
                 if ($allowFeedbacksOnlyIfPurchased && !$hasPurchased) {
                     return 'Not allowed to create review without purchasing the item first';
