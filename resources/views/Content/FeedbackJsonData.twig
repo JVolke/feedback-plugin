@@ -23,7 +23,7 @@
                                 "@type"             : "Review",
                                 "author"            : {
                                  "@type": "Person",
-                                 "name": "{{ feedback.authorName  }}"
+                                 "name": "{% if feedback.authorName | length > 0 %}{{ feedback.authorName  }}{% else %}Unbekannt{% endif %}"
                                 },
                                 "datePublished"     : "{{ feedback.createdAt }}",
                                 "name"              : "{{ feedback.title }}",
